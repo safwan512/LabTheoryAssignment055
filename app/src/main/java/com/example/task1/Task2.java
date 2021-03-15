@@ -11,92 +11,87 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class Task2 extends AppCompatActivity {
 
-    public String op;
-    public float calculation;
+    private Spinner spin;
+    private ArrayList<String> sign = new ArrayList<>();
+    private EditText etNumOne,etNumTwo;
+    private TextView tvresult;
+    private Button btnCalc,btnresult;
+
+    public double numOne,numTwo,result;
+
+    division div = new division();
+    Addition add = new Addition();
+    Subtraction sub = new Subtraction();
+    Multiply multi = new Multiply();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task2);
 
-        EditText numOne = findViewById(R.id.etNumOne);
-        EditText numTwo = findViewById(R.id.etNumTwo);
-        TextView result = findViewById(R.id.tvResult);
-        Button calc = findViewById(R.id.btnCalc);
-
-        Spinner mySpin = (Spinner) findViewById(R.id.dropOp);
-        ArrayAdapter<String> myAdap = new ArrayAdapter<String>(Task2.this,android.R.layout.simple_list_item_1,getResources().getStringArray(R.array.operation));
-        myAdap.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mySpin.setAdapter(myAdap);
+        etNumOne = findViewById(R.id.etNumOne);
+        etNumTwo = findViewById(R.id.etNumTwo);
+        tvresult = findViewById(R.id.tvResult);
+        btnCalc = findViewById(R.id.btnCalc);
 
 
-        mySpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spin = (Spinner) findViewById(R.id.dropOp);
+        sign.add("Choose Operator");
+        sign.add("Addition");
+        sign.add("Subtraction");
+        sign.add("Multiplication");
+        sign.add("Division");
+
+        ArrayAdapter<String> addData = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,sign);
+        addData.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin.setAdapter(addData);
+
+        btnCalc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch(position){
-                    case 0:
-                        op = "+";
+            public void onClick(View v) {
+
+                numOne = Double.parseDouble(etNumOne.getText().toString());
+                numTwo = Double.parseDouble(etNumTwo.getText().toString());
+                String select = spin.getSelectedItem().toString();
+
+                switch(select){
+                    case "Addition":
+                        result = add.add(numOne,numTwo);
+                        tvresult.setText("Answer of Addition is "+result);
                         break;
-                    case 1:
-                        op = "-";
+                    case "Subtraction":
+                        result = sub.sub(numOne,numTwo);
+                        tvresult.setText("Answer of Subtraction is "+result);
                         break;
-                    case 2:
-                        op = "*";
+                    case "Multiplication":
+                        result = multi.multi(numOne,numTwo);
+                        tvresult.setText("Answer of Multiplication is "+result);
                         break;
-                    case 3:
-                        op = "/";
+                    case "Division":
+                        result = div.div(numOne,numTwo);
+                        double check = Double.parseDouble(String.valueOf(result));
+                        if(check == 0){
+                            Toast.makeText(Task2.this, "Dividend Cannot be zero", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            tvresult.setText("Answer of Division is "+result);
+                        }
+
                         break;
                     default:
                         break;
                 }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
 
 
-calc.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        String Val = numOne.getText().toString();
-        float num1 = Float.parseFloat(Val);
-        String Val2 = numTwo.getText().toString();
-        float num2 = Float.parseFloat(Val2);
-
-        switch(op){
-            case "+":
-                calculation = num1+num2;
-                break;
-            case "-":
-                calculation = num1-num2;
-                break;
-            case "*":
-                calculation = num1*num2;
-                break;
-            case "/":
-                calculation = num1/num2;
-                break;
-            default:
-                break;
-        }
-
-        result.setText("Result is: "+calculation);
-    }
-});
-
-
-        Button btnR = findViewById(R.id.btnReturn);
-        btnR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent ret = new Intent(Task2.this,MainActivity.class);
-                startActivity(ret);
-            }
-        });
     }
 }

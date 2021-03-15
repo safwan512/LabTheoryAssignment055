@@ -10,10 +10,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-public static int oncreate = 0;
-public static int onstart;
-public static int onresume;
-public static int onrestart;
+public int oncreate;
+private int onstart;
+private int onresume;
+private int onrestart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +39,17 @@ public static int onrestart;
     protected void onStart() {
         super.onStart();
         TextView xstart = findViewById(R.id.tvStart);
-        Log.d("LifeCycle","On Create Called "+oncreate);
         onstart++;
+        Log.i("LifeCycle","On Create Called "+oncreate);
         xstart.setText("onStart() calls: "+onstart);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         TextView xResume = findViewById(R.id.tvResume);
-
         onresume++;
+        Log.i("LifeCycle","On Restart Called "+onresume);
         xResume.setText("onResume() calls: "+onresume);
     }
 
@@ -59,6 +58,7 @@ public static int onrestart;
         super.onRestart();
         TextView xRestart = findViewById(R.id.tvRestart);
         onrestart++;
+        Log.i("LifeCycle","On Restart Called "+onrestart);
         xRestart.setText("onReStart() calls: "+onrestart);
 
     }
